@@ -21,11 +21,11 @@ app.use(json());
 
 // Cấu hình CORS với options
 const corsOptions = {
-  origin: ['http://localhost:3001'], // Chỉ định frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các HTTP method được phép
-  allowedHeaders: ['Content-Type', 'Authorization'], // Header được phép
-};
-app.use(cors(corsOptions)); // Dùng middleware CORS
+    origin: ['https://lxrtam.net', 'https://be.lxrtam.net'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  };
+app.use(cors(corsOptions));  
 
 // Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
