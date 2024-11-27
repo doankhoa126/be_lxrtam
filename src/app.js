@@ -1,15 +1,12 @@
 import express, { json } from 'express';
-import cors from 'cors';  // Import the CORS package
-
-// import userRoutes from './routes/userRoutes.js';
-// import departmentRoutes from './routes/departmentRoutes.js';
-// import { mockAuthMiddleware } from './middlewares/authMiddleware.js';
-
+import cors from 'cors';  // Import CORS
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpecs from './swagger.js';
 import limiter from './middlewares/rateLimitMiddleware.js';
-import { verifyToken } from './middlewares/authMiddleware.js'; // Dùng middleware xác thực token
+import { verifyToken } from './middlewares/authMiddleware.js'; 
 import sanitizeInput from './middlewares/inputValidationMiddleware.js';
+
+// Routes import
 import attendanceRoutes from './routes/admin/attendanceRoutes.js';
 import overtimeRuleRoutes from './routes/admin/overtimeRuleRoutes.js';
 import salaryInfoRoutes from './routes/admin/salaryInfoRoutes.js';
@@ -18,19 +15,24 @@ import roleRoutes from './routes/admin/roleRoutes.js';
 import employeeRoutes from './routes/admin/employeeRoutes.js';
 
 const app = express();
-app.use(json());
-app.use(cors());
 
-// Cấu hình Swagger UI
+// Middleware
+app.use(json());
+
+// Cấu hình CORS với options
+const corsOptions = {
+  origin: ['http://localhost:3001'], // Chỉ định frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các HTTP method được phép
+  allowedHeaders: ['Content-Type', 'Authorization'], // Header được phép
+};
+app.use(cors(corsOptions)); // Dùng middleware CORS
+
+// Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
-// Cấu hình rate-limiting và sanitization middleware
-app.use(limiter); 
+// Rate limiting và input sanitization
+app.use(limiter);
 app.use(sanitizeInput);
-
-// Sử dụng middleware xác thực token
-// Cần phải xác thực người dùng trước khi truy cập vào các route chính
-// app.use(authRoutes); // Có thể uncomment khi bạn có authRoutes (chẳng hạn: đăng nhập, đăng ký)
 
 // Định nghĩa route cho các API chính, đã xác thực với verifyToken
 app.use('/attendance',  attendanceRoutes); // Quản lý bảng attendance
