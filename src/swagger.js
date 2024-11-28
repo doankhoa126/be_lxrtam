@@ -32,7 +32,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ['./src/routes/admin/*.js'], // Chỉ định vị trí các route để Swagger quét
+  apis: ['./src/routes/*/*.js'], // Chỉ định vị trí các route để Swagger quét
 };
 
 const swaggerSpecs = swaggerJsDoc(swaggerOptions);

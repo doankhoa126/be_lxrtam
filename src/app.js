@@ -13,7 +13,9 @@ import salaryInfoRoutes from './routes/admin/salaryInfoRoutes.js';
 import accCountEmployeeRoutes from './routes/admin/accountEmployeeRoutes.js';
 import roleRoutes from './routes/admin/roleRoutes.js';
 import employeeRoutes from './routes/admin/employeeRoutes.js';
-
+import authenRoutes from './routes/user/authRoutes.js';
+import salaryEmployeeRoutes from './routes/user/salaryEmployeeRoutes.js';
+import routerID from './routes/user/routerIDRoutes.js';
 const app = express();
 
 // Middleware
@@ -33,7 +35,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 // Rate limiting và input sanitization
 app.use(limiter);
 app.use(sanitizeInput);
-
+// app.use('/login',authenRoutes);
 // Định nghĩa route cho các API chính, đã xác thực với verifyToken
 app.use('/attendance',  attendanceRoutes); // Quản lý bảng attendance
 app.use('/overtime-rules',  overtimeRuleRoutes); // Quản lý bảng overtime rules
@@ -41,5 +43,7 @@ app.use('/salary-info',  salaryInfoRoutes); // Quản lý bảng salary info
 app.use('/accounts',  accCountEmployeeRoutes); // Quản lý tài khoản nhân viên
 app.use('/roles', roleRoutes); // Quản lý vai trò người dùng
 app.use('/employees',  employeeRoutes); // Quản lý thông tin nhân viên
-
+app.use('/login', authenRoutes);
+app.use('/router', routerID);
+app.use('/salary', salaryEmployeeRoutes);
 export default app;
