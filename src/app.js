@@ -17,7 +17,7 @@ import employeeRoutes from './routes/admin/employeeRoutes.js';
 import authenRoutes from './routes/user/authRoutes.js';
 import salaryEmployeeRoutes from './routes/user/salaryEmployeeRoutes.js';
 import routerID from './routes/user/routerIDRoutes.js';
-import imageRoutes from './routes/admin/imageRoutes.js';
+import pdfRoutes from './routes/admin/pdfRoutes.js';
 
 const app = express();
 
@@ -29,10 +29,11 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Cấu hình CORS với options
 const corsOptions = {
-    origin: ['https://lxrtam.net', 'https://be.lxrtam.net','localhost:3000','localhost:3001'],
+    origin: ['https://lxrtam.net', 'https://be.lxrtam.net','localhost:3000','localhost:3001','localhost:5924'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   };
+
 app.use(cors(corsOptions));  
 console.log(corsOptions)
 // Swagger UI
@@ -52,6 +53,6 @@ app.use('/employees',  employeeRoutes); // Quản lý thông tin nhân viên
 app.use('/login', authenRoutes);
 app.use('/router', routerID);
 app.use('/salary', salaryEmployeeRoutes);
-app.use('/api', imageRoutes);
+app.use('/api', pdfRoutes);
 
 export default app;
