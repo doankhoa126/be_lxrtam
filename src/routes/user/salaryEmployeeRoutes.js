@@ -1,5 +1,5 @@
 import express from 'express';
-import { getSalaryInfo, addSalary } from '../../controllers/user/salaryEmployeeController.js';
+import { getSalaryInfo, addSalary, updateStatus } from '../../controllers/user/salaryEmployeeController.js';
 
 const router = express.Router();
 
@@ -8,6 +8,7 @@ const router = express.Router();
  * /salary/{employee_id}:
  *   get:
  *     summary: Get salary information for an employee
+ *     tags: [EmployeeSalary]
  *     description: Retrieve salary details for the specified employee by employee_id.
  *     parameters:
  *       - in: path
@@ -45,6 +46,7 @@ router.get('/:employee_id', getSalaryInfo);
  * /salary:
  *   post:
  *     summary: Add a new salary record
+ *     tags: [EmployeeSalary]
  *     description: Add salary information for an employee.
  *     requestBody:
  *       required: true
@@ -86,5 +88,33 @@ router.get('/:employee_id', getSalaryInfo);
  *         description: Internal server error
  */
 router.post('/', addSalary);
+
+/**
+ * @swagger
+ * /salary/update-status:
+ *   post:
+ *     summary: Update status for employee_id
+ *     tags: [EmployeeSalary]
+ *     description: Update the status for the specified employee by employee_id.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               employee_id:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Status updated successfully
+ *       404:
+ *         description: Employee record not found
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/update-status', updateStatus);
 
 export default router;

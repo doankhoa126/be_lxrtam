@@ -5,6 +5,7 @@ import swaggerSpecs from './swagger.js';
 import limiter from './middlewares/rateLimitMiddleware.js';
 import { verifyToken } from './middlewares/authMiddleware.js'; 
 import sanitizeInput from './middlewares/inputValidationMiddleware.js';
+import path from 'path';
 
 // Routes import
 import attendanceRoutes from './routes/admin/attendanceRoutes.js';
@@ -16,25 +17,30 @@ import employeeRoutes from './routes/admin/employeeRoutes.js';
 import authenRoutes from './routes/user/authRoutes.js';
 import salaryEmployeeRoutes from './routes/user/salaryEmployeeRoutes.js';
 import routerID from './routes/user/routerIDRoutes.js';
+import imageRoutes from './routes/admin/imageRoutes.js';
+
 const app = express();
 
 // Middleware
 app.use(json());
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Cấu hình CORS với options
 const corsOptions = {
-    origin: ['https://lxrtam.net', 'https://be.lxrtam.net'],
+    origin: ['https://lxrtam.net', 'https://be.lxrtam.net','localhost:3000','localhost:3001'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   };
 app.use(cors(corsOptions));  
-
+console.log(corsOptions)
 // Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // Rate limiting và input sanitization
-app.use(limiter);
-app.use(sanitizeInput);
+// app.use(limiter);
+// app.use(sanitizeInput);
 // app.use('/login',authenRoutes);
 // Định nghĩa route cho các API chính, đã xác thực với verifyToken
 app.use('/attendance',  attendanceRoutes); // Quản lý bảng attendance
@@ -46,4 +52,6 @@ app.use('/employees',  employeeRoutes); // Quản lý thông tin nhân viên
 app.use('/login', authenRoutes);
 app.use('/router', routerID);
 app.use('/salary', salaryEmployeeRoutes);
+app.use('/api', imageRoutes);
+
 export default app;

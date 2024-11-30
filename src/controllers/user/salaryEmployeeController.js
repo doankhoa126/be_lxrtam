@@ -38,3 +38,32 @@ export const addSalary = async (req, res) => {
     res.status(500).json({ message: "Lỗi khi thêm thông tin lương" });
   }
 };
+
+
+export const updateStatus = async (req, res) => {
+  const { employee_id, status } = req.body;
+
+  try {
+    // Cập nhật status cho bản ghi có created_at mới nhất
+    const result = await db.query(
+      `UPDATE public.employee_salary_file
+       SET status = $1
+       WHERE employee_id = $2
+         AND created_at = (
+           SELECT MAX(created_at)
+           FROM public.employee_salary_file
+           WHERE employee_id = $2
+         )`,
+      [status, employee_id]
+    );
+
+    if (result.rowCount > 0) {
+      return res.status(200).json({ message: 'Cập nhật status thành công' });
+    } else {
+      return res.status(404).json({ message: 'Không tìm thấy bản ghi để cập nhật' });
+    }
+  } catch (error) {
+    console.error('Lỗi khi cập nhật status:', error);
+    return res.status(500).json({ message: 'Lỗi server, vui lòng thử lại sau' });
+  }
+};

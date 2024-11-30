@@ -3,6 +3,8 @@ import { getRouterInfo, addRouter } from '../../controllers/user/routerIDControl
 
 const router = express.Router();
 
+
+
 /**
  * @swagger
  * /router/{id_router}:
