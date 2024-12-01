@@ -1,14 +1,12 @@
 import express from 'express';
-import { pdfMiddleware, uploadPDF, loadPDF } from '../../controllers/admin/pdfController.js';
-
+import { imageMiddleware, uploadImage, loadImage } from '../../controllers/admin/imageController.js';
 const router = express.Router();
-
 /**
  * @swagger
  * /api/upload:
  *   post:
- *     summary: Upload a PDF
- *     tags: [PDFs]
+ *     summary: Upload an image
+ *     tags: [Images]
  *     requestBody:
  *       required: true
  *       content:
@@ -16,12 +14,12 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               file:
+ *               image:
  *                 type: string
  *                 format: binary
  *     responses:
  *       200:
- *         description: PDF uploaded successfully
+ *         description: Image uploaded successfully
  *         content:
  *           application/json:
  *             schema:
@@ -32,34 +30,32 @@ const router = express.Router();
  *                 path:
  *                   type: string
  *       400:
- *         description: No file uploaded or invalid file type
+ *         description: No file uploaded
  */
-router.post('/upload', pdfMiddleware.single('file'), uploadPDF);
-
+router.post('/upload', imageMiddleware.single('image'), uploadImage);
 /**
  * @swagger
- * /api/pdf/{fileName}:
+ * /api/images/{imageName}:
  *   get:
- *     summary: Load a PDF by name
- *     tags: [PDFs]
+ *     summary: Load an image by name
+ *     tags: [Images]
  *     parameters:
  *       - in: path
- *         name: fileName
+ *         name: imageName
  *         required: true
  *         schema:
  *           type: string
- *         description: The name of the PDF file
+ *         description: The name of the image file
  *     responses:
  *       200:
- *         description: The PDF file
+ *         description: The image file
  *         content:
- *           application/pdf:
+ *           image/jpeg:
  *             schema:
  *               type: string
  *               format: binary
  *       404:
- *         description: PDF not found
+ *         description: Image not found
  */
-router.get('/pdf/:fileName', loadPDF);
-
+router.get('/images/:imageName', loadImage);
 export default router;

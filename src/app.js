@@ -17,7 +17,7 @@ import employeeRoutes from './routes/admin/employeeRoutes.js';
 import authenRoutes from './routes/user/authRoutes.js';
 import salaryEmployeeRoutes from './routes/user/salaryEmployeeRoutes.js';
 import routerID from './routes/user/routerIDRoutes.js';
-import pdfRoutes from './routes/admin/pdfRoutes.js';
+import pdfRoutes from './routes/admin/imageRoutes.js';
 
 const app = express();
 
@@ -26,12 +26,12 @@ app.use(json());
 const __dirname = path.resolve();
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use(bodyParser.json({ limit: '100mb' }));
-app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
+// app.use(bodyParser.json({ limit: '100mb' }));
+// app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 
 // Cấu hình CORS với options
 const corsOptions = {
-    origin: ['https://lxrtam.net', 'https://be.lxrtam.net','localhost:3000','localhost:3001','localhost:5924'],
+    origin: ['https://lxrtam.net', 'https://be.lxrtam.net','http://localhost:3000','http://localhost:3001','http://localhost:5924'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   };
