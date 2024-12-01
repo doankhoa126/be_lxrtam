@@ -14,7 +14,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'https://be.lxrtam.net', // Thay đổi URL nếu cần
+        url: 'http://localhost:3000', // Thay đổi URL nếu cần
       },
     ],
     components: {
