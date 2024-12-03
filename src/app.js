@@ -17,8 +17,8 @@ import employeeRoutes from './routes/admin/employeeRoutes.js';
 import authenRoutes from './routes/user/authRoutes.js';
 import salaryEmployeeRoutes from './routes/user/salaryEmployeeRoutes.js';
 import routerID from './routes/user/routerIDRoutes.js';
-import pdfRoutes from './routes/admin/imageRoutes.js';
-
+import imageRoutes from './routes/admin/imageRoutes.js';
+import pdfRoutes from './routes/admin/pdfRoutes.js'
 const app = express();
 
 // Middleware
@@ -55,6 +55,6 @@ app.use('/employees',  employeeRoutes); // Quản lý thông tin nhân viên
 app.use('/login', authenRoutes);
 app.use('/router', routerID);
 app.use('/salary', salaryEmployeeRoutes);
-app.use('/api', pdfRoutes);
-
+app.use('/api', imageRoutes);
+app.use('/', pdfRoutes);
 export default app;
