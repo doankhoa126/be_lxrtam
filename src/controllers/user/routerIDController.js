@@ -44,3 +44,30 @@ export const addRouter = async (req, res) => {
     res.status(500).json({ message: "Lỗi khi thêm router" });
   }
 };
+
+// Kiểm tra xem employee_id đã có router hay chưa
+export const checkRouterByEmployeeId = async (req, res) => {
+  const { employee_id } = req.params;
+
+  try {
+    const result = await db.query(`
+      SELECT id_router 
+      FROM employee_router_mapping 
+      WHERE employee_id = $1
+    `, [employee_id]);
+
+    if (result.rows.length > 0) {
+      // Nếu employee_id đã có router
+      return res.status(400).json({
+        message: "Nhân viên này đã có mã xem lương",
+        id_router: result.rows[0].id_router
+      });
+    }
+
+    // Nếu employee_id chưa có router
+    res.json({ message: "Nhân viên chưa có mã xem lương" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
