@@ -1,20 +1,32 @@
-import express from 'express';
-import multer from 'multer';
-import { convertPdfToPng } from '../../controllers/admin/pdfController.js';
+import express from "express";
+import multer from "multer";
+import { uploadPngFiles } from "../../controllers/admin/pdfController.js";
 
 const router = express.Router();
 
-// Cấu hình Multer để lưu file PDF upload
-const upload = multer({ dest: 'uploads/' });
+// Configure multer for temporary file storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Temporary directory
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`); // Unique filename
+  },
+});
+
+const upload = multer({ storage });
+
+// Middleware to handle multiple files
+const uploadMultiple = upload.array("files", 10); // Limit to 10 files
 
 /**
  * @swagger
- * /upload-pdf:
+ * /upload/png-files:
  *   post:
- *     summary: Upload và chuyển đổi PDF sang PNG
- *     description: Tải file PDF, chuyển đổi thành PNG và lưu với tên chỉ định.
+ *     summary: Upload PNG files
  *     tags:
- *       - PDF
+ *       - File Upload
+ *     description: API to upload PNG files to the server.
  *     requestBody:
  *       required: true
  *       content:
@@ -22,16 +34,15 @@ const upload = multer({ dest: 'uploads/' });
  *           schema:
  *             type: object
  *             properties:
- *               file:
- *                 type: string
- *                 format: binary
- *                 description: Tệp PDF cần chuyển đổi
- *               fileName:
- *                 type: string
- *                 description: Tên file PNG lưu
+ *               files:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: List of PNG files to upload.
  *     responses:
  *       200:
- *         description: PDF đã được chuyển đổi thành PNG.
+ *         description: Files uploaded successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -39,11 +50,43 @@ const upload = multer({ dest: 'uploads/' });
  *               properties:
  *                 message:
  *                   type: string
- *                 outputDir:
+ *                   example: Tải lên tệp hoàn tất.
+ *                 results:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       fileName:
+ *                         type: string
+ *                         example: example.png
+ *                       savedAs:
+ *                         type: string
+ *                         example: sanitized_example.png
+ *                       outputPath:
+ *                         type: string
+ *                         example: /uploads/data/sanitized_example.png
+ *       400:
+ *         description: No files uploaded.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
  *                   type: string
+ *                   example: Không có tệp nào được tải lên.
  *       500:
- *         description: Đã xảy ra lỗi trong quá trình xử lý file.
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Đã xảy ra lỗi trong quá trình xử lý tệp.
  */
-router.post('/upload-pdf', upload.single('file'), convertPdfToPng);
+
+router.post("/upload/png-files", uploadMultiple, uploadPngFiles);
 
 export default router;

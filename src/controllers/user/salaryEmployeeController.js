@@ -67,3 +67,27 @@ export const updateStatus = async (req, res) => {
     return res.status(500).json({ message: 'Lỗi server, vui lòng thử lại sau' });
   }
 };
+
+// Lấy status của bản ghi mới nhất với employee_id
+export const getStatus = async (req, res) => {
+  const { employee_id } = req.params;
+
+  try {
+    const result = await db.query(`
+      SELECT status
+      FROM public.employee_salary_file
+      WHERE employee_id = $1
+      ORDER BY created_at DESC
+      LIMIT 1
+    `, [employee_id]);
+
+    if (result.rows.length > 0) {
+      return res.status(200).json({ status: result.rows[0].status });
+    } else {
+      return res.status(404).json({ message: 'Không tìm thấy status cho employee_id này' });
+    }
+  } catch (error) {
+    console.error('Lỗi khi lấy status:', error);
+    return res.status(500).json({ message: 'Lỗi server, vui lòng thử lại sau' });
+  }
+};
