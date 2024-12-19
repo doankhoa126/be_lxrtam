@@ -4,49 +4,33 @@ import dotenv from 'dotenv';
 dotenv.config(); // Only call once at the beginning of the file
 const JWT_SECRET = process.env.JWT_SECRET; // Lấy secret key từ biến môi trường
 
-export const mockAuthMiddleware = (req, res, next) => {
-    const role = req.user?.role?.role_id; 
-    if (!role) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    req.currentUserRole = role;
-    next();
-};
-
 export const verifyToken = (req, res, next) => {
-    const token = req.headers['authorization']?.startsWith('Bearer ') 
-        ? req.headers['authorization'].split(' ')[1] 
-        : null;
-
-    if (!token) {
-        return res.status(401).json({ error: 'Access token is missing.' });
-    }
-
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
-        if (err) {
-            return res.status(401).json({ error: 'Invalid token.' });
-        }
-        req.user = decoded; // Lưu thông tin user vào request
-        next();
-    });
-};
-
-export const authenticateToken = (req, res, next) => {
-  const token = req.headers['authorization']?.startsWith('Bearer ') 
-      ? req.headers['authorization'].split(' ')[1] 
-      : null;
+  const token = req.headers['authorization'];
 
   if (!token) {
-    return res.status(401).json({ message: 'Không có token, vui lòng đăng nhập lại.' });
+    return res.status(403).json({ message: 'Không có token, yêu cầu đăng nhập!' });
   }
 
   try {
+    // Xác thực token và lấy dữ liệu từ token
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded; 
+    req.user = decoded;  // Lưu thông tin người dùng từ token vào request
     next();
   } catch (error) {
-    console.error('Invalid token:', error);
-    res.status(403).json({ message: 'Token không hợp lệ.' });
+    console.error(error);
+    return res.status(403).json({ message: 'Token không hợp lệ!' });
   }
+};
+
+// Middleware kiểm tra phân quyền
+export const checkRole = (allowedRoles) => {
+  return (req, res, next) => {
+    const { role_id } = req.user;  // Lấy role_id từ token
+
+    if (!allowedRoles.includes(role_id)) {
+      return res.status(403).json({ message: 'Bạn không có quyền truy cập tài nguyên này!' });
+    }
+
+    next();
+  };
 };
