@@ -16,6 +16,7 @@ import salaryInfoRoutes from "./routes/admin/salaryInfoRoutes.js";
 import authenRoutes from "./routes/user/authRoutes.js";
 import routerID from "./routes/user/routerIDRoutes.js";
 import salaryEmployeeRoutes from "./routes/user/salaryEmployeeRoutes.js";
+import registerRoutes from './routes/user/accountRoutes.js';
 const app = express();
 
 // Middleware
@@ -56,4 +57,5 @@ app.use("/router", routerID);
 app.use("/salary", salaryEmployeeRoutes);
 app.use("/api", imageRoutes);
 app.use("/", pdfRoutes);
+app.use('/', registerRoutes);
 export default app;
