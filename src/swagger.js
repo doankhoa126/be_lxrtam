@@ -1,28 +1,28 @@
-import swaggerJsDoc from 'swagger-jsdoc';
+import swaggerJsDoc from "swagger-jsdoc";
 
 const swaggerOptions = {
   definition: {
-    openapi: '3.0.0',
+    openapi: "3.0.0",
     info: {
-      title: 'Company Management API',
-      version: '1.0.0',
-      description: 'API cho TÂM LUXURY',
+      title: "Company Management API",
+      version: "1.0.0",
+      description: "API cho TÂM LUXURY",
       contact: {
-        name: 'Admin',
-        email: 'admin@example.com',
+        name: "Admin",
+        email: "admin@example.com",
       },
     },
     servers: [
       {
-        url: 'http://localhost:3000', // Thay đổi URL nếu cần
+        url: "http://localhost:5000", // Thay đổi URL nếu cần
       },
     ],
     components: {
       securitySchemes: {
         bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT', // Định nghĩa Bearer token cho Swagger
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT", // Định nghĩa Bearer token cho Swagger
         },
       },
     },
@@ -32,7 +32,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ['./src/routes/*/*.js'], // Chỉ định vị trí các route để Swagger quét
+  apis: ["./src/routes/*/*.js"], // Chỉ định vị trí các route để Swagger quét
 };
 
 const swaggerSpecs = swaggerJsDoc(swaggerOptions);

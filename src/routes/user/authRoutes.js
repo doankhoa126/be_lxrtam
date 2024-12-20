@@ -1,5 +1,5 @@
-import express from 'express';
-import { login } from '../../controllers/user/authController.js';
+import express from "express";
+import { login } from "../../controllers/user/authController.js";
 
 const router = express.Router();
 
@@ -16,8 +16,6 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               email:
- *                 type: string
  *               password:
  *                 type: string
  *     responses:
@@ -28,5 +26,5 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized
  */
-router.post('/', login); // Changed from '/login' to '/'
+router.post("/", login); // Changed from '/login' to '/'
 export default router;

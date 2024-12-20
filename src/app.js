@@ -1,8 +1,8 @@
+import cors from "cors";
 import express, { json } from "express";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpecs from "./swagger.js";
-
 // Routes import
 import accCountEmployeeRoutes from "./routes/admin/accountEmployeeRoutes.js";
 import attendanceRoutes from "./routes/admin/attendanceRoutes.js";
@@ -13,10 +13,10 @@ import overtimeRuleRoutes from "./routes/admin/overtimeRuleRoutes.js";
 import pdfRoutes from "./routes/admin/pdfRoutes.js";
 import roleRoutes from "./routes/admin/roleRoutes.js";
 import salaryInfoRoutes from "./routes/admin/salaryInfoRoutes.js";
+import registerRoutes from "./routes/user/accountRoutes.js";
 import authenRoutes from "./routes/user/authRoutes.js";
 import routerID from "./routes/user/routerIDRoutes.js";
 import salaryEmployeeRoutes from "./routes/user/salaryEmployeeRoutes.js";
-import registerRoutes from './routes/user/accountRoutes.js';
 const app = express();
 
 // Middleware
@@ -30,13 +30,13 @@ const corsOptions = {
     "https://lxrtam.net",
     "https://be.lxrtam.net",
     "http://localhost:3000",
-    "http://localhost:3001",
+    "http://localhost:5000",
     "http://localhost:5924",
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
-
+app.use(cors(corsOptions)); // Áp dụng CORS
 // Swagger UI
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
@@ -57,5 +57,5 @@ app.use("/router", routerID);
 app.use("/salary", salaryEmployeeRoutes);
 app.use("/api", imageRoutes);
 app.use("/", pdfRoutes);
-app.use('/', registerRoutes);
+app.use("/", registerRoutes);
 export default app;
