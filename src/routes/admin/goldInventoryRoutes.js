@@ -3,7 +3,8 @@ import express from 'express';
 import {
     createGoldInventory,
     getGoldInventory,
-    updateGoldInventory
+    updateGoldInventory,
+    getUnfinishedOrders
 } from '../../controllers/admin/goldInventoryController.js';
 
 const router = express.Router();
@@ -11,6 +12,8 @@ const router = express.Router();
 router.post('/gold-inventory', createGoldInventory);
 router.get('/gold-inventory/:id', getGoldInventory);
 router.put('/gold-inventory/:id', updateGoldInventory);
+router.get("/unfinished-orders", getUnfinishedOrders);
+
 
 // Swagger Documentation
 /**
@@ -181,5 +184,43 @@ router.put('/gold-inventory/:id', updateGoldInventory);
  *       500:
  *         description: Failed to update record
  */
+
+/**
+ * @swagger
+ * /unfinished-orders:
+ *   get:
+ *     summary: Get unfinished gold inventory orders
+ *     tags: [GoldInventory]
+ *     responses:
+ *       200:
+ *         description: List of unfinished gold inventory orders
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       NgayLenDon:
+ *                         type: string
+ *                         format: date
+ *                       NguoiYeuCau:
+ *                         type: string
+ *                       NgayHoanThanh:
+ *                         type: string
+ *                         format: date
+ *                       TrangThaiDon:
+ *                         type: string
+ *       404:
+ *         description: No unfinished orders found
+ *       500:
+ *         description: Failed to fetch orders
+ */
+
 
 export default router;

@@ -59,5 +59,5 @@ app.use("/salary", salaryEmployeeRoutes);
 app.use("/api", imageRoutes);
 app.use("/", pdfRoutes);
 app.use("/", registerRoutes);
-app.use("/gold-inventory",goldInventoryRoutes)
+app.use("/", goldInventoryRoutes);
 export default app;
