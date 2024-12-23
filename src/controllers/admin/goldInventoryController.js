@@ -122,7 +122,7 @@ export const updateGoldInventory = async (req, res) => {
 
 export const getUnfinishedOrders = async (req, res) => {
     try {
-        const query = "SELECT * FROM gold_inventory_management WHERE TrangThaiDon = 'Chưa hoàn thành'";
+        const query = "SELECT * FROM gold_inventory_management WHERE TrangThaiDon = 'Chưa hoàn thành' order by NgayLenDon desc";
         const result = await db.query(query);
 
         if (result.rows.length === 0) {
