@@ -17,6 +17,7 @@ import registerRoutes from "./routes/user/accountRoutes.js";
 import authenRoutes from "./routes/user/authRoutes.js";
 import routerID from "./routes/user/routerIDRoutes.js";
 import salaryEmployeeRoutes from "./routes/user/salaryEmployeeRoutes.js";
+import goldInventoryRoutes from "./routes/admin/goldInventoryRoutes.js";
 const app = express();
 
 // Middleware
@@ -58,4 +59,5 @@ app.use("/salary", salaryEmployeeRoutes);
 app.use("/api", imageRoutes);
 app.use("/", pdfRoutes);
 app.use("/", registerRoutes);
+app.use("/gold-inventory",goldInventoryRoutes)
 export default app;
