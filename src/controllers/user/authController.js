@@ -13,19 +13,23 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h"; // Mặc định là 
 export const login = async (req, res) => {
   const { username, password } = req.body;
 
-  // Kiểm tra dữ liệu đầu vào
   if (!username || !password) {
-    return res
-      .status(400)
-      .json({ message: "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu." });
+    return res.status(400).json({
+      message: "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.",
+    });
   }
 
   try {
-    // 1. Kiểm tra xem tài khoản có tồn tại trong database
-    const result = await db.query(
-      "SELECT * FROM accounts WHERE username = $1",
-      [username]
-    );
+    // Kiểm tra tài khoản và lấy thông tin role
+    const accountQuery = `
+      SELECT a.*, ar.role_id, ar.department_role_name, 
+             ar.can_view, ar.can_update, ar.can_delete, ar.can_create
+      FROM accounts a
+      LEFT JOIN account_roles ar ON a.acc_id = ar.acc_id
+      WHERE a.username = $1
+    `;
+
+    const result = await db.query(accountQuery, [username]);
 
     if (result.rowCount === 0) {
       return res.status(400).json({ message: "Tài khoản không tồn tại." });
@@ -33,37 +37,50 @@ export const login = async (req, res) => {
 
     const account = result.rows[0];
 
-    // 2. So sánh mật khẩu người dùng nhập với mật khẩu đã mã hóa trong database
     const isPasswordValid = await bcrypt.compare(password, account.password);
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Sai mật khẩu." });
     }
 
-    // 3. Tạo token JWT
+    // Tạo token với đầy đủ thông tin permissions
     const token = jwt.sign(
       {
-        account_id: account.account_id,
+        userId: account.acc_id,
         username: account.username,
-        id_role: account.id_role,
+        role_id: account.role_id,
+        permissions: {
+          can_view: account.can_view,
+          can_update: account.can_update,
+          can_delete: account.can_delete,
+          can_create: account.can_create,
+        },
+        department_role_name: account.department_role_name,
       },
       JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN } // Token hết hạn dựa trên cấu hình
+      { expiresIn: JWT_EXPIRES_IN }
     );
 
-    // 4. Trả về thông tin đăng nhập thành công
     res.status(200).json({
       message: "Đăng nhập thành công.",
-      token, // Token để xác thực
+      token,
       user: {
-        account_id: account.account_id,
+        acc_id: account.acc_id,
         username: account.username,
-        id_role: account.id_role,
+        role_id: account.role_id,
+        department_role_name: account.department_role_name,
+        permissions: {
+          can_view: account.can_view,
+          can_update: account.can_update,
+          can_delete: account.can_delete,
+          can_create: account.can_create,
+        },
       },
     });
   } catch (error) {
     console.error("Error during login:", error);
-    res
-      .status(500)
-      .json({ message: "Lỗi hệ thống. Vui lòng thử lại sau.", error });
+    res.status(500).json({
+      message: "Lỗi hệ thống. Vui lòng thử lại sau.",
+      error: error.message,
+    });
   }
 };
