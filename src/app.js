@@ -27,31 +27,34 @@ app.use(json());
 const __dirname = path.resolve();
 
 app.use((req, res, next) => {
-  res.setHeader('X-Frame-Options', 'ALLOWALL');
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader("X-Frame-Options", "ALLOWALL");
+  res.setHeader("Access-Control-Allow-Origin", "*");
   next();
 });
-                                                                                                      
-app.use("/uploads", express.static(path.join(__dirname, "uploads"), {
-  setHeaders: (res) => {
-    res.setHeader('X-Frame-Options', 'ALLOWALL');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-}));
+
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"), {
+    setHeaders: (res) => {
+      res.setHeader("X-Frame-Options", "ALLOWALL");
+      res.setHeader("Access-Control-Allow-Origin", "*");
+    },
+  })
+);
 
 // CORS Middleware
 const corsOptions = {
   origin: [
     "https://lxrtam.net",
     "https://be.lxrtam.net",
-    "https://tamlxrgr.lol", 
+    "https://tamlxrgr.lol",
     "http://localhost:3000",
     "http://localhost:5000",
     "http://localhost:5924",
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Added OPTIONS
   allowedHeaders: ["Content-Type", "Authorization"],
-  exposedHeaders: ['X-Frame-Options'],
+  exposedHeaders: ["X-Frame-Options"],
   credentials: true, // Enable credentials
 };
 
@@ -78,6 +81,6 @@ app.use("/api", imageRoutes);
 app.use("/", pdfRoutes);
 app.use("/", registerRoutes);
 app.use("/", goldInventoryRoutes);
-app.use('/', goldInventorySumRoutes);
-
+app.use("/", goldInventorySumRoutes);
+//test commit
 export default app;
